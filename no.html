@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Oh No 😢</title>
+<style>
+body{
+  margin:0;height:100vh;display:flex;justify-content:center;align-items:center;
+  background:#2f2f2f;color:white;font-family:Segoe UI,sans-serif;
+  overflow:hidden;
+}
+.emoji{
+  position:absolute;font-size:30px;opacity:.3;animation:fall 6s linear infinite;
+}
+@keyframes fall{
+  from{top:-10%}to{top:110%}
+}
+.card{
+  background:#444;padding:30px;border-radius:20px;text-align:center;width:340px;z-index:2;
+}
+button{
+  width:100%;padding:12px;border:none;border-radius:30px;
+  background:#ff5f8a;color:white;font-size:16px;cursor:pointer;margin-top:10px;
+}
+</style>
+</head>
+<body>
+<span class="emoji" style="left:10%">💔</span>
+<span class="emoji" style="left:30%">😢</span>
+<span class="emoji" style="left:50%">😭</span>
+<span class="emoji" style="left:70%">🥀</span>
+
+<div class="card">
+  <h2>Ouch… that hurt 😢</h2>
+  <p id="msg"></p>
+  <button onclick="tryAgain()">🔄 Okay okay… try again</button>
+</div>
+
+<script>
+const funnyNo=[
+ "😂 I knew you'd press NO first!",
+ "😈 Playing hard to get, huh?",
+ "💔 Straight to the heartbreak section!",
+ "🤣 That NO button looked suspicious, didn’t it?"
+];
+document.getElementById("msg").textContent =
+  funnyNo[Math.floor(Math.random()*funnyNo.length)];
+
+function tryAgain(){ window.location.href="index.html"; }
+</script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>A Question 💖</title>
+<style>
+body{
+  margin:0;height:100vh;display:flex;justify-content:center;align-items:center;
+  background:linear-gradient(135deg,#ff5f8a,#ff9acb);
+  font-family:Segoe UI,sans-serif;
+  overflow:hidden;
+}
+.card{
+  background:white;padding:35px; width:90%; max-width:360px;
+  text-align:center;border-radius:20px;box-shadow:0 20px 40px rgba(0,0,0,.25);
+  position:relative;
+}
+h1{color:#ff3f7f;font-size:1.5rem;}
+p{font-size:1rem;}
+button{
+  width:100%;padding:12px;margin:10px 0;border:none;border-radius:30px;
+  font-size:16px;cursor:pointer;transition:.3s;position:relative;
+}
+.yes{background:#ff3f7f;color:white}
+.no{background:#aaa;color:white}
+button:hover{transform:scale(1.05)}
+
+/* MOBILE ADJUSTMENTS */
+@media (max-width: 400px){
+  .card{padding:25px;}
+  h1{font-size:1.3rem;}
+  p{font-size:0.95rem;}
+  button{padding:10px;font-size:15px;}
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Hello, <span id="name">My Love</span> 💖</h1>
+  <p>I have a small <b>golden message</b> for you.<br>Would you like to read it?</p>
+
+  <button class="yes" onclick="goYes()">✨ Yes please</button>
+  <button class="no" id="noBtn" onclick="goNo()">🙈 No thanks</button>
+</div>
+
+<script>
+// Load receiver name
+document.getElementById("name").textContent =
+  localStorage.getItem("receiver") || "My Love";
+
+// Track clicks
+function trackClick(button){
+  let log = JSON.parse(localStorage.getItem("clickLog")) || [];
+  log.push({button: button, time: new Date().toISOString()});
+  localStorage.setItem("clickLog", JSON.stringify(log));
+}
+
+// Button clicks
+function goYes(){ trackClick("yes"); window.location.href="yes.html"; }
+function goNo(){ trackClick("no"); window.location.href="no.html"; }
+
+// Moving NO button (responsive)
+const noBtn = document.getElementById("noBtn");
+noBtn.addEventListener("mouseenter", () => {
+  const card = document.querySelector(".card");
+  const cardRect = card.getBoundingClientRect();
+  const btnRect = noBtn.getBoundingClientRect();
+
+  const maxX = cardRect.width - btnRect.width - 10;
+  const maxY = cardRect.height - btnRect.height - 10;
+
+  const randomX = Math.floor(Math.random() * maxX);
+  const randomY = Math.floor(Math.random() * maxY);
+
+  noBtn.style.position = "absolute";
+  noBtn.style.left = randomX + "px";
+  noBtn.style.top = randomY + "px";
+});
+</script>
+</body>
+</html>
