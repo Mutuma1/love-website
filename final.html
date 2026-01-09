@@ -1,29 +1,23 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Forever Starts Here 💖</title>
+<title>Forever 💖</title>
 <style>
-body{
-  margin:0;height:100vh;display:flex;justify-content:center;align-items:center;
-  background:linear-gradient(135deg,#ff3f7f,#ff9acb);
-  font-family:Segoe UI,sans-serif;
-}
-.card{
-  background:white;padding:40px;width:360px;text-align:center;
-  border-radius:22px;box-shadow:0 25px 45px rgba(0,0,0,.3);
-}
-h1{color:#ff3f7f}
+body{margin:0;height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#ff3f7f,#ff9acb);font-family:Segoe UI;}
+.card{background:#fff;padding:40px;border-radius:22px;text-align:center;max-width:400px;}
 </style>
 </head>
 <body>
 <div class="card">
-  <h1>Thank You 💖</h1>
-  <p>From this moment on,<br>
-     I promise care, patience, laughter,<br>
-     growth, respect, and love.</p>
-  <p>New memories.<br>New dates.<br>A better version of me — for you.</p>
-  <p>✨ This is just the beginning ✨</p>
+<h1>Thank You <span id="name"></span> 💖</h1>
+<p>Forever yours,<br><b id="sender"></b></p>
 </div>
+
+<script>
+document.getElementById("name").textContent = localStorage.getItem("receiver");
+document.getElementById("sender").textContent = localStorage.getItem("sender");
+</script>
 </body>
 </html>
