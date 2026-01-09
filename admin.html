@@ -1,106 +1,58 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Love Admin Dashboard</title>
+<title>Love Admin</title>
 <style>
-body{
-  margin:0;height:100vh;display:flex;justify-content:center;align-items:center;
-  background:linear-gradient(135deg,#ff5f8a,#ff87b7);font-family:Segoe UI,sans-serif;
-}
-.card{
-  background:white;padding:30px;width:380px;border-radius:20px;
-  box-shadow:0 25px 45px rgba(0,0,0,.25);
-}
-h2{text-align:center;color:#ff3f7f;margin-bottom:15px}
-label{font-size:14px;color:#555}
-input{width:100%;padding:10px;margin:6px 0 15px 0;border-radius:10px;border:1px solid #ccc;font-size:14px;}
-button{
-  width:100%;padding:12px;border-radius:30px;border:none;background:#ff3f7f;color:white;font-size:15px;cursor:pointer;margin-bottom:10px;
-}
-button:hover{background:#ff1f66;transform:scale(1.05)}
-.reset{background:#aaa}
-.reset:hover{background:#888}
-.stats{background:#fff0f6;padding:15px;border-radius:12px;font-size:14px;color:#444;margin-top:10px;}
-.hidden{display:none;}
+body{margin:0;height:100vh;display:flex;align-items:center;justify-content:center;
+background:linear-gradient(135deg,#ff5f8a,#ff87b7);font-family:Segoe UI;}
+.card{background:#fff;padding:30px;width:380px;border-radius:20px;box-shadow:0 25px 45px rgba(0,0,0,.25);}
+input,button{width:100%;padding:12px;margin:8px 0;border-radius:12px;border:1px solid #ccc;}
+button{background:#ff3f7f;color:#fff;border:none;cursor:pointer;}
 </style>
 </head>
 <body>
-
-<!-- LOGIN -->
-<div class="card" id="loginBox">
-<h2>🔐 Admin Login</h2>
-<input type="password" id="password" placeholder="Enter admin password">
-<button onclick="login()">Login</button>
+<div class="card">
+<h2>🔐 Love Admin</h2>
+<input id="receiver" placeholder="Receiver name">
+<input id="sender" placeholder="Sender name">
+<input id="youtube" placeholder="YouTube Video ID (e.g. dQw4w9WgXcQ)">
+<button onclick="saveData()">💾 Save & Generate Link</button>
 </div>
 
-<!-- DASHBOARD -->
-<div class="card hidden" id="dashboard">
-<h2>🛠 Admin Dashboard</h2>
+<script type="module">
+import { db } from "./firebase.js";
+import { ref, push, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-<label>Receiver Name</label>
-<input id="receiverInput">
+const receiverInput = document.getElementById("receiver");
+const senderInput = document.getElementById("sender");
+const youtubeInput = document.getElementById("youtube");
 
-<label>Sender Name</label>
-<input id="senderInput">
+window.saveData = async function(){
+  const receiver = receiverInput.value.trim();
+  const sender = senderInput.value.trim();
+  const youtubeID = youtubeInput.value.trim();
 
-<label>YouTube Video ID</label>
-<input id="youtubeInput" placeholder="dQw4w9WgXcQ">
-
-<button onclick="saveData()">💾 Save Data</button>
-
-<div class="stats" id="stats"></div>
-<button class="reset" onclick="resetStats()">♻ Reset Click Log</button>
-</div>
-
-<script>
-const ADMIN_PASSWORD = "love123";
-const loginBox = document.getElementById("loginBox");
-const dashboard = document.getElementById("dashboard");
-
-function login(){
-  if(document.getElementById("password").value===ADMIN_PASSWORD){
-    loginBox.classList.add("hidden");
-    dashboard.classList.remove("hidden");
-    loadData();
-  } else alert("Wrong password 💔");
-}
-
-const receiverInput=document.getElementById("receiverInput");
-const senderInput=document.getElementById("senderInput");
-const youtubeInput=document.getElementById("youtubeInput");
-const statsBox=document.getElementById("stats");
-
-function loadData(){
-  receiverInput.value = localStorage.getItem("receiver") || "";
-  senderInput.value = localStorage.getItem("sender") || "";
-  youtubeInput.value = localStorage.getItem("youtubeID") || "";
-  loadStats();
-}
-
-function saveData(){
-  localStorage.setItem("receiver",receiverInput.value);
-  localStorage.setItem("sender",senderInput.value);
-  localStorage.setItem("youtubeID",youtubeInput.value);
-  alert("Saved successfully 💖");
-}
-
-function loadStats(){
-  let log = JSON.parse(localStorage.getItem("clickLog")) || [];
-  if(log.length===0) statsBox.innerHTML="No clicks yet.";
-  else{
-    let html="<strong>Click Log (chronological):</strong><br>";
-    log.forEach((item,i)=>{
-      html+=`${i+1}. ${item.button.toUpperCase()} @ ${new Date(item.time).toLocaleString()}<br>`;
-    });
-    statsBox.innerHTML=html;
+  if(!receiver || !sender){
+    alert("Please fill in receiver and sender 💖");
+    return;
   }
-}
 
-function resetStats(){
-  localStorage.removeItem("clickLog");
-  loadStats();
-}
+  // Push new record
+  const newRef = push(ref(db, "loveData"));
+  await set(newRef, {
+    receiver,
+    sender,
+    youtubeID,
+    createdAt: Date.now(),
+    clicks: {}
+  });
+
+  const link = `${location.origin}/index.html?id=${newRef.key}`;
+  prompt("Share this link 💖", link);
+};
 </script>
 </body>
 </html>
