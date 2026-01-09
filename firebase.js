@@ -1,19 +1,21 @@
+
 // firebase.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getDatabase } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-// 🔥 Replace these values with YOUR Firebase project config
+// 🔥 REPLACE these values with your Firebase Realtime Database config
 export const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
-  projectId: "YOUR_PROJECT",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "XXXX",
-  appId: "XXXX"
+  
+  apiKey: "AIzaSyAh27cRZY8RcsVdycPVy-WsRl839PkuBys",
+  authDomain: "lov3-card.firebaseapp.com",
+  databaseURL: "https://lov3-card-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "lov3-card",
+  storageBucket: "lov3-card.firebasestorage.app",
+  messagingSenderId: "721363840628",
+  appId: "1:721363840628:web:57b7129ce0ef28e1c96b21"
 };
 
-// Initialize Firebase
+// Initialize Firebase app
 export const app = initializeApp(firebaseConfig);
 
 // Initialize Realtime Database
