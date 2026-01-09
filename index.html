@@ -1,51 +1,101 @@
 
 
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>A Question 💖</title>
+
 <style>
-body{margin:0;height:100vh;display:flex;align-items:center;justify-content:center;
-background:linear-gradient(135deg,#ff5f8a,#ff9acb);font-family:Segoe UI;}
-.card{background:#fff;padding:35px;width:360px;border-radius:20px;text-align:center;position:relative;}
-button{width:100%;padding:12px;margin:10px 0;border-radius:30px;border:none;font-size:16px;cursor:pointer;}
-.yes{background:#ff3f7f;color:#fff;}
-.no{background:#aaa;color:#fff;}
+body{
+  margin:0;height:100vh;display:flex;justify-content:center;align-items:center;
+  background:linear-gradient(135deg,#ff5f8a,#ff9acb);
+  font-family:Segoe UI,sans-serif;
+  overflow:hidden;
+}
+.card{
+  background:white;padding:35px; width:90%; max-width:360px;
+  text-align:center;border-radius:20px;
+  box-shadow:0 20px 40px rgba(0,0,0,.25);
+  position:relative;
+}
+h1{color:#ff3f7f;font-size:1.5rem;}
+p{font-size:1rem;}
+button{
+  width:100%;padding:12px;margin:10px 0;border:none;border-radius:30px;
+  font-size:16px;cursor:pointer;transition:.3s;
+}
+.yes{background:#ff3f7f;color:white}
+.no{background:#aaa;color:white}
+button:hover{transform:scale(1.05)}
 </style>
 </head>
+
 <body>
 <div class="card">
-<h1>Hello <span id="name">My Love</span> 💖</h1>
-<p>Would you like to read my message?</p>
-<button class="yes" onclick="go('yes')">✨ Yes please</button>
-<button class="no" id="noBtn" onclick="go('no')">🙈 No thanks</button>
+  <h1>Hello, <span id="name">My Love</span> 💖</h1>
+  <p>I have a small <b>golden message</b> for you.<br>Would you like to read it?</p>
+
+  <button class="yes" id="yesBtn">✨ Yes please</button>
+  <button class="no" id="noBtn">🙈 No thanks</button>
 </div>
 
 <script type="module">
+/* 🔥 FIREBASE IMPORTS */
 import { db } from "./firebase.js";
-import { ref, get, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import {
+  ref, get, push, set
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-const params = new URLSearchParams(location.search);
-const id = params.get("id");
-localStorage.setItem("loveId", id);
+/* 🔑 GET SESSION ID FROM URL */
+const params = new URLSearchParams(window.location.search);
+const sessionId = params.get("id");
 
-if(id){
-  const snap = await get(ref(db, "loveData/" + id));
-  if(snap.exists()){
-    const data = snap.val();
-    document.getElementById("name").textContent = data.receiver;
-    localStorage.setItem("receiver", data.receiver);
-    localStorage.setItem("sender", data.sender);
-    localStorage.setItem("youtubeID", data.youtubeID);
-  }
+if(!sessionId){
+  alert("Invalid or missing love link 💔");
 }
 
-window.go = async function(btn){
-  const clickRef = ref(db, "loveData/" + id + "/clicks/" + Date.now());
-  await update(clickRef, { button: btn, time: new Date().toISOString() });
-  location.href = btn + ".html?id=" + id;
+/* 📥 LOAD DATA FROM FIREBASE */
+const dataRef = ref(db, "loveData/" + sessionId);
+
+get(dataRef).then(snapshot=>{
+  if(snapshot.exists()){
+    document.getElementById("name").textContent =
+      snapshot.val().receiver || "My Love";
+  }
+});
+
+/* 📝 LOG CLICKS */
+function logClick(type){
+  push(ref(db, `loveData/${sessionId}/clicks`), {
+    button: type,
+    time: new Date().toISOString()
+  });
+}
+
+/* 👉 BUTTON EVENTS */
+document.getElementById("yesBtn").onclick = ()=>{
+  logClick("yes");
+  window.location.href = `yes.html?id=${sessionId}`;
 };
+
+document.getElementById("noBtn").onclick = ()=>{
+  logClick("no");
+  window.location.href = `no.html?id=${sessionId}`;
+};
+
+/* 😈 MOVING NO BUTTON */
+const noBtn=document.getElementById("noBtn");
+noBtn.addEventListener("mouseenter",()=>{
+  const card=document.querySelector(".card");
+  const maxX=card.clientWidth-noBtn.clientWidth-10;
+  const maxY=card.clientHeight-noBtn.clientHeight-10;
+  noBtn.style.position="absolute";
+  noBtn.style.left=Math.random()*maxX+"px";
+  noBtn.style.top=Math.random()*maxY+"px";
+});
 </script>
 </body>
 </html>
